@@ -1,7 +1,15 @@
-venv/ 
-__pycache__/ 
-*.pyc 
-*.env 
-*.log 
-tmp/ 
-temp/ 
+# فایل‌ها و پوشه‌های محیط مجازی
+venv/
+__pycache__/
+*.pyc
+
+# فایل‌های حساس
+*.env
+*.key
+
+# فایل‌های لاگ
+*.log
+
+# پوشه‌های موقتی
+tmp/
+temp/

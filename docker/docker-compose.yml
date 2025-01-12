@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:6.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: web
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/bitcoin_wallets
+      - REDIS_URL=redis://redis:6379/0
+      - ENCRYPTION_KEY=your-encryption-key-here
+
+  celery:
+    build:
+      context: ..
+      dockerfile: docker/celery.Dockerfile
+    container_name: celery
+    depends_on:
+      - web
+      - redis
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/bitcoin_wallets
+      - REDIS_URL=redis://redis:6379/0
+      - ENCRYPTION_KEY=your-encryption-key-here
+
+volumes:
+  mongo_data:
